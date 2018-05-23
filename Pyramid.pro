@@ -25,10 +25,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    imageprocessing.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    imageprocessing.h
 
 FORMS += \
         mainwindow.ui
+
+INCLUDEPATH += $$PWD\library
+
+LIBS += $$PWD\library\libopencv_imgproc340.dll
+LIBS += $$PWD\library\libopencv_core340.dll
+#LIBS += $$PWD\library\libopencv_highgui340.dll
+#LIBS += $$PWD\library\libopencv_imgcodecs340.dll
+#LIBS += $$PWD\library\libopencv_imgproc340.dll
+#LIBS += $$PWD\library\libopencv_features2d340.dll
+#LIBS += $$PWD\library\\libopencv_calib3d340.dll
+#LIBS += $$PWD\library\libopencv_video340.dll
+#LIBS += $$PWD\library\libopencv_videoio340.dll

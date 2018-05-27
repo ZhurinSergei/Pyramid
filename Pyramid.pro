@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    imageprocessing.cpp
+    imageprocessing.cpp \
+    image.cpp
 
 HEADERS += \
         mainwindow.h \
-    imageprocessing.h
+    imageprocessing.h \
+    image.h
 
 FORMS += \
         mainwindow.ui

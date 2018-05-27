@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    vectorImages.clear();
     delete ui;
 }
 
@@ -23,22 +24,17 @@ void MainWindow::slotOpenFile()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     "Open Image", QDir::currentPath(), "Image Files (*.png *.jpg)");
-
     if(fileName.isNull())
     {
         qDebug() << "Filename is empty";
         return;
     }
 
-    image = QImage(fileName);
-    ui->label_Image->setPixmap(QPixmap::fromImage(image));
-    ui->label_Size->setText(QString("Size: %1x%2").arg(image.width()).arg(image.height()));
+    vectorImages.push_back(new Image(fileName));
+    SetNewCurrentImage(vectorImages.back()->GetImage());
 
-    ui->spinBox_Layer->setValue(0);
-    if(image.width() < image.height())
-        ui->spinBox_Layer->setMaximum(std::log10(image.width()) / std::log10(2) - 1);
-    else
-        ui->spinBox_Layer->setMaximum(std::log10(image.height()) / std::log10(2) - 1);
+    std::sort(vectorImages.begin(), vectorImages.end(), Image::SortByDiagonal);
+    UpdateComboBox();
 }
 
 void MainWindow::InitializeForm()
@@ -50,15 +46,42 @@ void MainWindow::InitializeForm()
 
 void MainWindow::on_spinBox_Layer_valueChanged(int valueSpinBox)
 {
-    if(image.isNull())
-    {
-        QMessageBox::warning(this, "Warning!", "You did not select a file");
-        return;
-    }
-
     QImage imageLayer;
-    QSize size = imageProcessing->GetLayerOfPyramid(image, imageLayer, valueSpinBox);
+    QSize size = imageProcessing->GetLayerOfPyramid(currentQImage,
+                 imageLayer, valueSpinBox, 2);
 
     ui->label_Image->setPixmap(QPixmap::fromImage(imageLayer));
     ui->label_Size->setText(QString("Size: %1x%2").arg(size.width()).arg(size.height()));
+}
+
+void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
+{
+    auto itr = std::find_if(vectorImages.begin(), vectorImages.end(),
+                            [&](Image* el){ return el->GetFileName() == arg1; });
+    if(itr != vectorImages.end())
+        SetNewCurrentImage((*itr)->GetImage());
+}
+
+void MainWindow::UpdateComboBox()
+{
+    ui->comboBox->clear();
+    for(int i = 0; i < vectorImages.size(); i++)
+        ui->comboBox->addItem(vectorImages.at(i)->GetFileName());
+}
+
+void MainWindow::UpdateSpinBox()
+{
+    ui->spinBox_Layer->setValue(0);
+    if(currentQImage.width() < currentQImage.height())
+        ui->spinBox_Layer->setMaximum(std::log10(currentQImage.width()) / std::log10(2) - 1);
+    else
+        ui->spinBox_Layer->setMaximum(std::log10(currentQImage.height()) / std::log10(2) - 1);
+}
+
+void MainWindow::SetNewCurrentImage(QImage image)
+{
+    currentQImage = image;
+    ui->label_Image->setPixmap(QPixmap::fromImage(currentQImage));
+    ui->label_Size->setText(QString("Size: %1x%2").arg(currentQImage.width()).arg(currentQImage.height()));
+    UpdateSpinBox();
 }

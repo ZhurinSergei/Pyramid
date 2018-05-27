@@ -12,7 +12,7 @@ class ImageProcessing
 public:
     explicit ImageProcessing();
 
-    QSize GetLayerOfPyramid(QImage inputImage, QImage &outputImage, int layer);
+    QSize GetLayerOfPyramid(QImage inputImage, QImage &outputImage, int layer, double coefficient);
 
 private:
     QImage GetQImageFromMat(cv::Mat imageMat);

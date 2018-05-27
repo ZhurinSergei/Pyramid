@@ -5,11 +5,11 @@ ImageProcessing::ImageProcessing()
 
 }
 
-QSize ImageProcessing::GetLayerOfPyramid(QImage inputImage, QImage &outputImage, int layer)
+QSize ImageProcessing::GetLayerOfPyramid(QImage inputImage, QImage &outputImage, int layer, double coefficient)
 {
     outputImage = inputImage.copy();
 
-    if(layer == 0)
+    if(layer == 0 || coefficient == 0)
         return QSize(outputImage.width(), outputImage.height());
 
     for(int i = 0; i < layer; i++)
@@ -18,13 +18,13 @@ QSize ImageProcessing::GetLayerOfPyramid(QImage inputImage, QImage &outputImage,
         cv::GaussianBlur(mat, mat, cv::Size(5, 5), 3);
         outputImage = GetQImageFromMat(mat);
 
-        outputImage = outputImage.scaled(QSize(outputImage.width() / 2, outputImage.height() / 2));
+        outputImage = outputImage.scaled(QSize(outputImage.width() / coefficient, outputImage.height() / coefficient));
     }
 
     QSize size = QSize(outputImage.width(), outputImage.height());
 
     for(int i = 0; i < layer; i++)
-        outputImage = outputImage.scaled(QSize(outputImage.width() * 2, outputImage.height() * 2));
+        outputImage = outputImage.scaled(QSize(outputImage.width() * coefficient, outputImage.height() * coefficient));
 
     return size;
 }

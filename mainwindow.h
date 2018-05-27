@@ -7,6 +7,7 @@
 #include <QMessageBox>
 
 #include "imageprocessing.h"
+#include "image.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,14 +23,19 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QImage image;
     ImageProcessing *imageProcessing;
+    QImage currentQImage;
+    std::vector<Image *> vectorImages;
 
+    void SetNewCurrentImage(QImage image);
+    void UpdateComboBox();
+    void UpdateSpinBox();
     void InitializeForm();
 
 private slots:
     void slotOpenFile();
     void on_spinBox_Layer_valueChanged(int valueSpinBox);
+    void on_comboBox_currentIndexChanged(const QString &arg1);
 };
 
 #endif // MAINWINDOW_H

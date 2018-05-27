@@ -22,9 +22,7 @@ QSize ImageProcessing::GetLayerOfPyramid(QImage inputImage, QImage &outputImage,
     }
 
     QSize size = QSize(outputImage.width(), outputImage.height());
-
-    for(int i = 0; i < layer; i++)
-        outputImage = outputImage.scaled(QSize(outputImage.width() * coefficient, outputImage.height() * coefficient));
+    outputImage = outputImage.scaled(QSize(inputImage.width(), inputImage.height()));
 
     return size;
 }

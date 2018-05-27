@@ -10,9 +10,9 @@ public:
     explicit Image(QString fileName);
     static bool SortByDiagonal(Image *a, Image *b);
 
-    double GetLengthOfDiagonal() ;
-    QString GetFileName();
-    QImage GetImage();
+    double GetLengthOfDiagonal() const;
+    QString GetFileName() const;
+    QImage GetImage() const;
 
 private:
     QImage image;

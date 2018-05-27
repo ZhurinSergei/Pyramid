@@ -17,17 +17,17 @@ Image::Image(QString fileName)
             std::sqrt(image.width() * image.width() + image.height() * image.height());
 }
 
-double Image::GetLengthOfDiagonal()
+double Image::GetLengthOfDiagonal() const
 {
     return lengthOfDiagonal;
 }
 
-QString Image::GetFileName()
+QString Image::GetFileName() const
 {
     return fileName;
 }
 
-QImage Image::GetImage()
+QImage Image::GetImage() const
 {
-    return  image;
+    return image;
 }

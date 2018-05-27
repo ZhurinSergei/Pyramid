@@ -29,13 +29,15 @@ private:
 
     void SetNewCurrentImage(QImage image);
     void UpdateComboBox();
-    void UpdateSpinBox();
+    void UpdateSpinBox(double coefficient);
     void InitializeForm();
+    int GetMaximumLayer(QImage image, double coefficient);
 
 private slots:
     void slotOpenFile();
     void on_spinBox_Layer_valueChanged(int valueSpinBox);
     void on_comboBox_currentIndexChanged(const QString &arg1);
+    void on_doubleSpinBox_Coefficient_valueChanged(double arg1);
 };
 
 #endif // MAINWINDOW_H

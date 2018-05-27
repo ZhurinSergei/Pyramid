@@ -48,7 +48,7 @@ void MainWindow::on_spinBox_Layer_valueChanged(int valueSpinBox)
 {
     QImage imageLayer;
     QSize size = imageProcessing->GetLayerOfPyramid(currentQImage,
-                 imageLayer, valueSpinBox, 2);
+                 imageLayer, valueSpinBox, ui->doubleSpinBox_Coefficient->text().replace(',', '.').toDouble());
 
     ui->label_Image->setPixmap(QPixmap::fromImage(imageLayer));
     ui->label_Size->setText(QString("Size: %1x%2").arg(size.width()).arg(size.height()));
@@ -69,13 +69,13 @@ void MainWindow::UpdateComboBox()
         ui->comboBox->addItem(vectorImages.at(i)->GetFileName());
 }
 
-void MainWindow::UpdateSpinBox()
+void MainWindow::UpdateSpinBox(double coefficient)
 {
+    if(vectorImages.empty())
+        return;
+
     ui->spinBox_Layer->setValue(0);
-    if(currentQImage.width() < currentQImage.height())
-        ui->spinBox_Layer->setMaximum(std::log10(currentQImage.width()) / std::log10(2) - 1);
-    else
-        ui->spinBox_Layer->setMaximum(std::log10(currentQImage.height()) / std::log10(2) - 1);
+    ui->spinBox_Layer->setMaximum(GetMaximumLayer(currentQImage, coefficient));
 }
 
 void MainWindow::SetNewCurrentImage(QImage image)
@@ -83,5 +83,27 @@ void MainWindow::SetNewCurrentImage(QImage image)
     currentQImage = image;
     ui->label_Image->setPixmap(QPixmap::fromImage(currentQImage));
     ui->label_Size->setText(QString("Size: %1x%2").arg(currentQImage.width()).arg(currentQImage.height()));
-    UpdateSpinBox();
+    UpdateSpinBox(ui->doubleSpinBox_Coefficient->text().replace(',', '.').toDouble());
+}
+
+void MainWindow::on_doubleSpinBox_Coefficient_valueChanged(double arg1)
+{
+    if(arg1 < 1.1)
+        ui->doubleSpinBox_Coefficient->setValue(1.1);
+    UpdateSpinBox(arg1);
+}
+
+int MainWindow::GetMaximumLayer(QImage image, double coefficient)
+{
+    int maximumLayer = 0;
+    int minimumLength = image.width() < image.height() ? image.width() : image.height();
+
+    while(true)
+    {
+        maximumLayer++;
+        minimumLength = std::floor(minimumLength / coefficient);
+
+        if(minimumLength < 2)
+            return --maximumLayer;
+    }
 }

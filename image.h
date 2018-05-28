@@ -8,7 +8,7 @@ class Image
 {
 public:
     explicit Image(QString fileName);
-    static bool SortByDiagonal(Image *a, Image *b);
+    static bool CompareByDiagonal(const Image *a, const Image *b);
 
     double GetLengthOfDiagonal() const;
     QString GetFileName() const;

@@ -24,7 +24,10 @@ MainWindow::~MainWindow()
 void MainWindow::slotOpenFile()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
-                                                    "Open Image", QDir::currentPath(), "Image Files (*.png *.jpg)");
+                                                    "Open Image",
+                                                    QDir::currentPath(),
+                                                    "Image Files (*.png *.jpg)"
+                                                    );
     if(fileName.isNull())
     {
         qDebug() << "Filename is empty";
@@ -34,7 +37,7 @@ void MainWindow::slotOpenFile()
     vectorImages.push_back(new Image(fileName));
     SetNewCurrentImage(vectorImages.back()->GetImage());
 
-    std::sort(vectorImages.begin(), vectorImages.end(), Image::SortByDiagonal);
+    std::sort(vectorImages.begin(), vectorImages.end(), Image::CompareByDiagonal);
     UpdateComboBox();
 }
 
@@ -49,7 +52,10 @@ void MainWindow::on_spinBox_Layer_valueChanged(int valueSpinBox)
 {
     QImage imageLayer;
     QSize size = imageProcessing->GetLayerOfPyramid(currentQImage,
-                 imageLayer, valueSpinBox, ui->doubleSpinBox_Coefficient->text().replace(',', '.').toDouble());
+                                                    imageLayer,
+                                                    valueSpinBox,
+                                                    ui->doubleSpinBox_Coefficient->text().replace(',', '.').toDouble()
+                                                    );
 
     ui->label_Image->setPixmap(QPixmap::fromImage(imageLayer));
     ui->label_Size->setText(QString("Size: %1x%2").arg(size.width()).arg(size.height()));
@@ -89,8 +95,9 @@ void MainWindow::SetNewCurrentImage(QImage image)
 
 void MainWindow::on_doubleSpinBox_Coefficient_valueChanged(double arg1)
 {
-    if(arg1 < 1.1)
-        ui->doubleSpinBox_Coefficient->setValue(1.1);
+    double minimumCoefficient = 1.1;
+    if(arg1 < minimumCoefficient)
+        ui->doubleSpinBox_Coefficient->setValue(minimumCoefficient);
     UpdateSpinBox(arg1);
 }
 
@@ -99,12 +106,11 @@ int MainWindow::GetMaximumLayer(QImage image, double coefficient)
     int maximumLayer = 0;
     int minimumLength = image.width() < image.height() ? image.width() : image.height();
 
-    while(true)
+    while(minimumLength >= 2)
     {
         maximumLayer++;
         minimumLength = std::floor(minimumLength / coefficient);
-
-        if(minimumLength < 2)
-            return --maximumLayer;
     }
+
+    return --maximumLayer;
 }

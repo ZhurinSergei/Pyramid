@@ -18,7 +18,8 @@ QSize ImageProcessing::GetLayerOfPyramid(QImage inputImage, QImage &outputImage,
         cv::GaussianBlur(mat, mat, cv::Size(5, 5), 3);
         outputImage = GetQImageFromMat(mat);
 
-        outputImage = outputImage.scaled(QSize(outputImage.width() / coefficient, outputImage.height() / coefficient));
+        outputImage = outputImage.scaled(QSize(outputImage.width() / coefficient,
+                                               outputImage.height() / coefficient));
     }
 
     QSize size = QSize(outputImage.width(), outputImage.height());

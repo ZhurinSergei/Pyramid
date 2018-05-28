@@ -1,6 +1,6 @@
 #include "image.h"
 
-bool Image::SortByDiagonal(Image *a, Image *b)
+bool Image::CompareByDiagonal(const Image *a, const Image *b)
 {
     return (a->GetLengthOfDiagonal() < b->GetLengthOfDiagonal());
 }

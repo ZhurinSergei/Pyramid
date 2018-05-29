@@ -10,7 +10,8 @@
 class ImageProcessing
 {
 public:
-    explicit ImageProcessing();
+     explicit ImageProcessing();
+    ~ImageProcessing();
 
     QSize GetLayerOfPyramid(QImage inputImage, QImage &outputImage, int layer, double coefficient);
 

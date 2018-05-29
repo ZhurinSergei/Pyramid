@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    imageProcessing = new ImageProcessing();
+    imageProcessing = std::unique_ptr<ImageProcessing>(new ImageProcessing());
 
     InitializeForm();
 
@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     vectorImages.clear();
-    delete imageProcessing;
     delete ui;
 }
 
@@ -34,7 +33,7 @@ void MainWindow::slotOpenFile()
         return;
     }
 
-    vectorImages.push_back(new Image(fileName));
+    vectorImages.push_back(std::make_shared<Image>(fileName));
     SetNewCurrentImage(vectorImages.back()->GetImage());
 
     std::sort(vectorImages.begin(), vectorImages.end(), Image::CompareByDiagonal);
@@ -64,7 +63,7 @@ void MainWindow::on_spinBox_Layer_valueChanged(int valueSpinBox)
 void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
 {
     auto itr = std::find_if(vectorImages.begin(), vectorImages.end(),
-                            [&](Image* el){ return el->GetFileName() == arg1; });
+                            [&](std::shared_ptr<Image> el){ return el->GetFileName() == arg1; });
     if(itr != vectorImages.end())
         SetNewCurrentImage((*itr)->GetImage());
 }

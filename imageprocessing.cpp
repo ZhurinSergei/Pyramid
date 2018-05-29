@@ -5,6 +5,11 @@ ImageProcessing::ImageProcessing()
 
 }
 
+ImageProcessing::~ImageProcessing()
+{
+    qDebug() << "delete ImageProcessing";
+}
+
 QSize ImageProcessing::GetLayerOfPyramid(QImage inputImage, QImage &outputImage, int layer, double coefficient)
 {
     outputImage = inputImage.copy();

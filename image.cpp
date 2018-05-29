@@ -1,6 +1,11 @@
 #include "image.h"
 
-bool Image::CompareByDiagonal(const Image *a, const Image *b)
+Image::~Image()
+{
+    qDebug() << "delete Image";
+}
+
+bool Image::CompareByDiagonal(const std::shared_ptr<Image> a, const std::shared_ptr<Image> b)
 {
     return (a->GetLengthOfDiagonal() < b->GetLengthOfDiagonal());
 }

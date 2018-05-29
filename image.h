@@ -3,12 +3,16 @@
 
 #include <QImage>
 #include <QFileInfo>
+#include <QDebug>
+
+#include <memory>
 
 class Image
 {
 public:
     explicit Image(QString fileName);
-    static bool CompareByDiagonal(const Image *a, const Image *b);
+    ~Image();
+    static bool CompareByDiagonal(const std::shared_ptr<Image> a, const std::shared_ptr<Image> b);
 
     double GetLengthOfDiagonal() const;
     QString GetFileName() const;

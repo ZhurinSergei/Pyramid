@@ -6,6 +6,8 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include <memory>
+
 #include "imageprocessing.h"
 #include "image.h"
 
@@ -23,9 +25,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    ImageProcessing *imageProcessing;
+    std::vector<std::shared_ptr<Image>> vectorImages;
+    std::unique_ptr<ImageProcessing> imageProcessing;
     QImage currentQImage;
-    std::vector<Image *> vectorImages;
 
     void SetNewCurrentImage(QImage image);
     void UpdateComboBox();
